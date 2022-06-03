@@ -15,6 +15,7 @@ function App() {
   const [turns, setTurns] = useState(0);
   const [choiseOne, setChoiseOne] = useState(null);
   const [choiseTwo, setChoiseTwo] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   // shuffle cards
   const shuffleCards = () => {
@@ -22,6 +23,8 @@ function App() {
       .sort(() => Math.random() - 0.5)
       .map((card) => ({ ...card, id: Math.random() }));
 
+    setChoiseOne(null);
+    setChoiseTwo(null);
     setCards(shuffledCards);
     setTurns(0);
   };
@@ -33,10 +36,17 @@ function App() {
     setChoiseOne(null);
     setChoiseTwo(null);
     setTurns((prevTurn) => prevTurn + 1);
+    setDisabled(false);
   };
+
+  useEffect(() => {
+    shuffleCards();
+  }, []);
+
   // compare 2 selected cards
   useEffect(() => {
     if (choiseOne) {
+      setDisabled(true);
       if (choiseOne.src === choiseTwo.src) {
         setCards((prevCards) => {
           return prevCards.map((card) => {
@@ -49,7 +59,7 @@ function App() {
         });
       }
 
-      resetTurn();
+      setTimeout(() => resetTurn(), 500);
     }
   }, [choiseTwo]);
 
@@ -69,9 +79,11 @@ function App() {
             item={item}
             handleClick={handleClick}
             flipped={item === choiseOne || item === choiseTwo || item.matched}
+            disabled={disabled}
           />
         ))}
       </div>
+      <p className=" m-5 bg-rose-700 w-auto">Turns: {turns}</p>
     </div>
   );
 }

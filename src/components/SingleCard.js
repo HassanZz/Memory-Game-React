@@ -1,6 +1,6 @@
 import "./SingleCard.css";
 
-const MakeGridCards = ({ item, handleClick, flipped }) => {
+const MakeGridCards = ({ item, handleClick, flipped, disabled }) => {
   return (
     <div
       key={item.id}
@@ -8,7 +8,14 @@ const MakeGridCards = ({ item, handleClick, flipped }) => {
     >
       {flipped && <img src={item.src}></img>}
       {!flipped && (
-        <img src="/img/cover.jpg" onClick={() => handleClick(item)}></img>
+        <img
+          src="/img/cover.jpg"
+          onClick={() => {
+            if (!disabled) {
+              handleClick(item);
+            }
+          }}
+        ></img>
       )}
     </div>
   );
